@@ -12,7 +12,7 @@ pipeline {
     }
   }
 
-  // stages {
+  stages {
 
   //   stage('Checkout Source') {
   //     steps {
@@ -41,5 +41,6 @@ pipeline {
         }
       }
     }
+  }
 
   }
