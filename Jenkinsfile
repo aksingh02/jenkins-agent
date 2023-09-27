@@ -1,28 +1,27 @@
 pipeline {
-agent { dockerfile true }
+  agent {
+    docker {
+      image 'my-dynamic-agent'
+    }
+  }
 
-   stages {
-
-    stage('Cloning Git') {
-	    steps{
-	      sh 'echo checking out source code'
-	    }  
-     }  
-
-    
-    stage('Build-and-Tag') {
-      steps{	
-        sh 'echo Build and Tag'
-          }
+  stages {
+    stage('Build') {
+      steps {
+        echo 'Building the application...'
+      }
     }
 
-    stage('Post-to-dockerhub') {
-     steps {
-        sh 'echo post to dockerhub repo'
-     }
+    stage('Test') {
+      steps {
+        echo 'Testing the application...'
+      }
     }
-    
- }
 
-
+    stage('Deploy') {
+      steps {
+        echo 'Deploying the application...'
+      }
+    }
+  }
 }
