@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'my-dynamic-agent'
+      image 'docker-agent-slave'
     }
   }
 
