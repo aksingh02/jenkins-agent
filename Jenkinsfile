@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'docker-agent-slave'
+      image 'jenkins/agent'
     }
   }
 
