@@ -1,46 +1,28 @@
 pipeline {
+agent { dockerfile true }
 
-  environment {
-    dockerimagename = "aks0207/jenkins-agent"
-    dockerImage = ""
-  }
+   stages {
 
-  agent {
-    kubernetes {
-      yamlFile 'demo.yaml'
-      idleMinutes 1
-    }
-  }
+    stage('Cloning Git') {
+	    steps{
+	      sh 'echo checking out source code'
+	    }  
+     }  
 
-  stages {
-
-  //   stage('Checkout Source') {
-  //     steps {
-  //       git branch: 'main', url: 'https://github.com/aksingh02/nginx-jenkins.git'
-  //     }
-  //   }
-
-    stage('Build maven code') {
-      steps {
-      container('mavencontainer') {  
-          sh "mvn clean install"
-       }    
-      }
-    }
-
-
-    stage('Pushing Image') {
-      environment {
-               registryCredential = 'dockerhub-credentials'
-           }
-      steps{
-        script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImage.push("latest")
+    
+    stage('Build-and-Tag') {
+      steps{	
+        sh 'echo Build and Tag'
           }
-        }
-      }
     }
-  }
 
-  }
+    stage('Post-to-dockerhub') {
+     steps {
+        sh 'echo post to dockerhub repo'
+     }
+    }
+    
+ }
+
+
+}
