@@ -1,29 +1,31 @@
 pipeline {
 agent { dockerfile true }
 
-   stages {
-
-    stage('Cloning Git') {
-	    steps{
-	      sh 'echo checking out source code'
-	    }  
-     }  
- 
-    stage('Test'){
-      steps{
-      	sh 'echo SAST stage'
-	   }
+   environment {
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'docker build -t aks0207/jenkins-docker-hub .'
+      }
     }
-
-    
-    stage('Build-and-Tag') {
-    /* This builds the actual image; synonymous to
-         * docker build on the command line */
-      steps{	
-        sh 'echo Build and Tag'
-          }
+    stage('Login') {
+      steps {
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+      }
     }
- }
+    stage('Push') {
+      steps {
+        sh 'docker push aks0207/jenkins-docker-hub'
+      }
+    }
+  }
+  post {
+    always {
+      sh 'docker logout'
+    }
+  }
 
 
 }
