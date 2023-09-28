@@ -1,3 +1,3 @@
-FROM node:16-alpine
+FROM jenkins/agent
 
 RUN apk add -U git curl
