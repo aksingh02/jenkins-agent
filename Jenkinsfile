@@ -1,27 +1,28 @@
 pipeline {
-  agent {
-    docker {
-      image 'jenkins/agent'
-    }
+  agent { dockerfile true }
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
   }
-
   stages {
     stage('Build') {
       steps {
-        echo 'Building the application...'
+        sh 'docker build -t aks0207/jenkins-docker-slave .'
       }
     }
-
-    stage('Test') {
+    stage('Login') {
       steps {
-        echo 'Testing the application...'
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
       }
     }
-
-    stage('Deploy') {
+    stage('Push') {
       steps {
-        echo 'Deploying the application...'
+        sh 'docker push aks0207/jenkins-docker-hub'
       }
+    }
+  }
+  post {
+    always {
+      sh 'docker logout'
     }
   }
 }
